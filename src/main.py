@@ -3,6 +3,9 @@ import credentials
 import getpass
 import sys
 
+from tabulate import tabulate
+
+
 argv = sys.argv
 
 SCHOOL_EP = 'https://gymstola.bakalari.cz'
@@ -19,6 +22,7 @@ response = user.send_request('/api/3/marks')
 
 subjects_raw = response.json()
 
+result = {}
 for subject in subjects_raw.get('Subjects'):
     marks_raw = subject.get('Marks')
 
@@ -43,4 +47,7 @@ for subject in subjects_raw.get('Subjects'):
     rounded_average = round(average, 2)
     # subject['Average'] = average5
     
-    print(subject.get('Subject').get('Name'), rounded_average)
+    result[subject.get('Subject').get('Name')] = rounded_average
+
+# format 
+print(tabulate(result.items(), headers=['Subject', 'Average']))
